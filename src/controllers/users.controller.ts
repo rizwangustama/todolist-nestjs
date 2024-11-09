@@ -1,15 +1,15 @@
 import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Post, UseInterceptors, UseGuards, Param } from "@nestjs/common";
-import { TransformInterceptor } from "src/interceptors/transform.interceptors";
+import { TransformInterceptor } from 'src/interceptors/transform.interceptors';
 import { UsersServices } from '../services/users.services';
-import { ResponseBuilder } from "src/utils/response.builder";
-import { JwtAuthGuard } from "src/utils/jwt-auth.guard";
+import { JwtAuthGuard } from 'src/utils/jwt-auth.guard';
+import { ResponseBuilder } from '../utils/response.builder';
 
 @Controller('/users')
 @UseInterceptors(TransformInterceptor)
 export class UsersController {
   constructor(private userServices: UsersServices) {}
 
-  @Get() 
+  @Get()
   @UseGuards(JwtAuthGuard)
   async findAll() {
     const items: any = await this.userServices.findAll();
@@ -43,7 +43,7 @@ export class UsersController {
     try {
       const result = await this.userServices.deleteUsers(body);
       console.log(result);
-      return ResponseBuilder.success(result);  // Assuming ResponseBuilder is used to format the response
+      return ResponseBuilder.success(result); // Assuming ResponseBuilder is used to format the response
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -51,5 +51,4 @@ export class UsersController {
       throw new BadRequestException('Failed to delete user hah');
     }
   }
-
 }

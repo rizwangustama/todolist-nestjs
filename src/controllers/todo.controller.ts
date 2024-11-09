@@ -12,15 +12,13 @@ export interface ApiResponse<T> {
 @Controller('/todolist')
 @UseInterceptors(TransformInterceptor)
 export class TodoController {
-  constructor(
-    private todoServices: TodoServices
-  ) {}
+  constructor(private todoServices: TodoServices) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
   async findAll(): Promise<ApiResponse<TodoDto[]>> {
-    const data = await this.todoServices.findAll();
-    return data;
+    const result: any = await this.todoServices.findAll();
+    return result;
   }
 
   @Get(':id')
@@ -29,7 +27,7 @@ export class TodoController {
     try {
       return this.todoServices.findById(id);
     } catch (error) {
-      
+      console.log(error);
     }
   }
 
@@ -40,6 +38,7 @@ export class TodoController {
       console.log('Controller', body);
       return this.todoServices.createTodo(body);
     } catch (error) {
+      console.log(error);
     }
   }
 
@@ -49,8 +48,7 @@ export class TodoController {
     try {
       return this.todoServices.deleteTodo(body);
     } catch (error) {
-      
+      console.log(error);
     }
   }
-  
 }

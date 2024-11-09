@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  nestjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"   # Menghubungkan port 3000 di container ke port 3000 di host
+    environment:
+      NODE_ENV: production
+      DB_HOST: db   # Nama service MariaDB di Docker Compose
+      DB_USER: rizwangustama
+      DB_PASSWORD: B1smilah
+      DB_NAME: TODO_LIST
+    depends_on:
+      - db  # Menunggu MariaDB berjalan sebelum aplikasi NestJS berjalan
+    networks:
+      - nestjs_network
+
+  db:
+    image: mariadb:11.2.2  # Menggunakan image MariaDB versi 11.2.2
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: rizwangustama
+      MYSQL_PASSWORD: B1smilah
+      MYSQL_DATABASE: TODO_LIST
+    ports:
+      - "3306:3306"
+    networks:
+      - nestjs_network
+
+networks:
+  nestjs_network:
+    driver: bridge

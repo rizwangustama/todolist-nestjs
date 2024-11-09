@@ -12,7 +12,7 @@ export class TransformInterceptor implements NestInterceptor {
             isSuccessfully: data.isSuccessfully,
             payload: Array.isArray(data.payload)
               ? data.payload.map((item: any): any => this.transformKeys(item))
-              : this.transformKeys(data.payload)
+              : this.transformKeys(data.payload),
           };
         }
         return this.transformKeys(data);

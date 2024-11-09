@@ -9,7 +9,9 @@ export class UsersRepository {
 
   // * All Users
   async findAll(): Promise<any[]> {
-    const [rows] = await this.connection.execute('SELECT ID_USER, USERNAME, FULL_NAME, CREATE_AT, UPDATE_AT FROM USERS');
+    const [rows] = await this.connection.execute(
+      'SELECT ID_USER, USERNAME, FULL_NAME, CREATE_AT, UPDATE_AT FROM USERS',
+    );
     return rows as any[];
   }
 
@@ -35,7 +37,7 @@ export class UsersRepository {
 
       const [result] = await this.connection.execute(
         'INSERT INTO USERS (USERNAME, PASSWORD, FULL_NAME) VALUES (?, ?, ?)',
-        [username, password, fullName]
+        [username, password, fullName],
       );
 
       const insertId: any = (result as any).insertId;
@@ -47,18 +49,15 @@ export class UsersRepository {
 
       return insertId;
     } catch (error) {
-      throw new Error(`Failed to Create User: ${error.message}` );
+      throw new Error(`Failed to Create User: ${error.message}`);
     }
   }
 
   async deleteUsers(id: any) {
     try {
-      await this.connection.execute(
-        'DELETE FROM USERS WHERE ID_USER = ?',
-        [id]
-      );
+      await this.connection.execute('DELETE FROM USERS WHERE ID_USER = ?', [id]);
     } catch (error) {
-      
+      console.log(error);
     }
   }
 }
