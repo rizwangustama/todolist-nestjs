@@ -1,8 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { TodoDto } from "src/dto/todo.dto";
-import { TodoRepository } from "src/repositories/todo.repository";
-import { ResponseBuilder } from "src/utils/response.builder";
-
+import { Injectable } from '@nestjs/common';
+import { TodoDto } from 'src/dto/todo.dto';
+import { TodoRepository } from 'src/repositories/todo.repository';
+import { ResponseBuilder } from 'src/utils/response.builder';
 
 export interface ApiResponse<T> {
   isSuccessfully: boolean;
@@ -11,9 +10,9 @@ export interface ApiResponse<T> {
 
 @Injectable()
 export class TodoServices {
-  constructor(private todoRepository : TodoRepository) {}
+  constructor(private todoRepository: TodoRepository) {}
   async findAll(): Promise<ApiResponse<TodoDto[]>> {
-    const data: TodoDto[] =  await this.todoRepository.findAll();
+    const data: TodoDto[] = await this.todoRepository.findAll();
     return ResponseBuilder.success(data);
   }
 
@@ -24,7 +23,7 @@ export class TodoServices {
   }
 
   async createTodo(body: any) {
-    const activityRandom = Math.floor(Math.random()* 1000);
+    const activityRandom = Math.floor(Math.random() * 1000);
     const formatNumber = String(activityRandom).padStart(3, '0');
     const activityNumber = `ACT${formatNumber}`;
     const getDataId = await this.todoRepository.createTodo(body, activityNumber);
@@ -34,6 +33,7 @@ export class TodoServices {
 
   async deleteTodo(body: any) {
     const getId = parseInt(body.id);
+    console.log(getId);
     const payloadDelete = await this.todoRepository.findById(getId);
     const countDelete: number = await this.todoRepository.deleteTodo(getId);
     console.log(countDelete);
@@ -41,6 +41,16 @@ export class TodoServices {
       return ResponseBuilder.error('Data Tidak Berhasil Di Delete');
     } else {
       return ResponseBuilder.success(payloadDelete, 'Data Telah Dihapus');
+    }
+  }
+  async updateTodo(body: any) {
+    const updateData: any = await this.todoRepository.updateTodo(body);
+    const getId: number = parseInt(body.id);
+    const updateColumnData = await this.todoRepository.findById(getId);
+    if (updateData.affectedRows === 0) {
+      return ResponseBuilder.error();
+    } else {
+      return ResponseBuilder.success(updateColumnData);
     }
   }
 }

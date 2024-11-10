@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, UseInterceptors, UseGuards } from "@nestjs/common";
-import { TodoDto } from "src/dto/todo.dto";
-import { TransformInterceptor } from "src/interceptors/transform.interceptors";
-import { TodoServices } from "src/services/todo.services";
-import { JwtAuthGuard } from "src/utils/jwt-auth.guard";
+import {Body, Controller, Delete, Get, Param, Post, UseInterceptors, UseGuards, Put} from "@nestjs/common";
+import { TodoDto } from 'src/dto/todo.dto';
+import { TransformInterceptor } from 'src/interceptors/transform.interceptors';
+import { TodoServices } from 'src/services/todo.services';
+import { JwtAuthGuard } from 'src/utils/jwt-auth.guard';
 
 export interface ApiResponse<T> {
   isSuccessfully: boolean;
@@ -44,11 +44,22 @@ export class TodoController {
 
   @Delete()
   @UseGuards(JwtAuthGuard)
-  async deleteTodoList(@Body() body: any) {
+  async deleteTodoList(@Body() body: any): Promise<any> {
     try {
+      console.log(body, 'body nih');
       return this.todoServices.deleteTodo(body);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  @Put()
+  @UseGuards(JwtAuthGuard)
+  async updateTodoListController(@Body() body: any) {
+    try {
+      return this.todoServices.updateTodo(body);
+    } catch (err) {
+      console.log(err);
     }
   }
 }

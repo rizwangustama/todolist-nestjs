@@ -41,6 +41,21 @@ export class TodoRepository {
     }
   }
 
+  async updateTodo(body: any) {
+    try {
+      console.log(body);
+      const { id, subject, description, status } = body;
+      const [data] = await this.connection.execute(
+        'UPDATE TODO_LIST SET SUBJECT = ?, DESCRIPTION = ?, STATUS = ? WHERE ID = ?',
+        [subject, description, status, id],
+      );
+      console.log(data);
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async deleteTodo(id: number): Promise<any> {
     try {
       const [data] = await this.connection.execute(
